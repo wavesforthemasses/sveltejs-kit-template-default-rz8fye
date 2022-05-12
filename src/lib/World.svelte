@@ -4,7 +4,15 @@
   import * as SC from "svelte-cubed";
 </script>
 
-<PE.World gravity={[0, -9.81, 0]} allowSleep>
+<PE.World 
+  gravity={[0, -9.81, 0]}
+  defaultContactMaterial={{
+    contactEquationStiffness: 5e6,
+    contactEquationRelaxation: 10
+  }}
+  quatNormalizeFast={true}
+  quatNormalizeSkip={3}
+  >
   <SC.Canvas
     background={new THREE.Color(0x34756)}
     fog={new THREE.FogExp2(0x34756, 0.05)}
