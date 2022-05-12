@@ -13,7 +13,7 @@
   export let restitution = .9;
   export let mass = 10;
 
-  const alphaMap = new THREE.TextureLoader().load( '43dfa829f98aa1da4700f0c65ce0d10e.jpg' );
+  const alphaMap = new THREE.TextureLoader().load( 'ball.png' );
 
   const geometry = new THREE.SphereBufferGeometry(radius)
 </script>
