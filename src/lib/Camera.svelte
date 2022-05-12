@@ -10,5 +10,5 @@
   fov={20}
   near={0.5}
   far={-25}
-  {target}
+  target={[target[0], 0, target[2]]}
 />

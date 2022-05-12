@@ -12,6 +12,7 @@
   export let friction = 10;
   export let restitution = .9;
   export let mass = 10;
+  export let onCollide = () => null;
 
   let visible = false
 
@@ -25,7 +26,7 @@
 
 {#if visible}
   <!-- Ball -->
-  <PE.Body {mass} bind:position={position} bind:rotation={$rotation} velocity={velocity} linearDamping={.5}>
+  <PE.Body {mass} bind:position={position} bind:rotation={$rotation} bind:velocity={velocity} linearDamping={.5} on:collide={onCollide}>
     <PE.Sphere {radius} />
     <PE.Material {friction} {restitution} />
   </PE.Body>
