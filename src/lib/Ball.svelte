@@ -13,20 +13,27 @@
   export let restitution = .9;
   export let mass = 10;
 
-  const alphaMap = new THREE.TextureLoader().load( 'dMYV4cf.png' ); 
+  let visible = false
+
+  const alphaMap = new THREE.TextureLoader().load( 'https://stackblitz.com/files/sveltejs-kit-template-default-rz8fye/github/wavesforthemasses/sveltejs-kit-template-default-rz8fye/master/static/dMYV4cf.png', () => {
+    visible = true
+  } )
+  alphaMap.needsUpdate = true;
 
   const geometry = new THREE.SphereBufferGeometry(radius)
 </script>
 
-<!-- Ball -->
-<PE.Body {mass} bind:position={position} bind:rotation={$rotation} velocity={velocity} linearDamping={.5}>
-  <PE.Sphere {radius} />
-  <PE.Material {friction} {restitution} />
-</PE.Body>
-<SC.Mesh
-  position={position.toArray()}
-  rotation={$rotation.toArray()}
-  geometry={geometry}
-  material={new THREE.MeshLambertMaterial({ color, alphaMap, transparent: true })}
-  castShadow
-/>
+{#if visible}
+  <!-- Ball -->
+  <PE.Body {mass} bind:position={position} bind:rotation={$rotation} velocity={velocity} linearDamping={.5}>
+    <PE.Sphere {radius} />
+    <PE.Material {friction} {restitution} />
+  </PE.Body>
+  <SC.Mesh
+    position={position.toArray()}
+    rotation={$rotation.toArray()}
+    geometry={geometry}
+    material={new THREE.MeshLambertMaterial({ color, alphaMap, transparent: true })}
+    castShadow
+  />
+{/if}
