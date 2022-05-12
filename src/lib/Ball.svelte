@@ -9,11 +9,9 @@
   export let rotation = PE.writableVec3();
   export let color = 0x990000;
   export let radius = .2;
-  export let friction = 10;
-  export let restitution = .9;
+  export let friction = 100;
+  export let restitution = 1;
   export let mass = 10;
-  export let onCollide = () => null;
-
   let visible = false
 
   const alphaMap = new THREE.TextureLoader().load( 'https://cdn.jsdelivr.net/gh/wavesforthemasses/sveltejs-kit-template-default-rz8fye@master/static/ball.png', () => {
@@ -26,7 +24,7 @@
 
 {#if visible}
   <!-- Ball -->
-  <PE.Body {mass} bind:position={position} bind:rotation={$rotation} bind:velocity={velocity} linearDamping={.5} on:collide={onCollide}>
+  <PE.Body {mass} bind:position={position} bind:rotation={$rotation} bind:velocity={velocity} linearDamping={.5}>
     <PE.Sphere {radius} />
     <PE.Material {friction} {restitution} />
   </PE.Body>
@@ -34,7 +32,7 @@
     position={position.toArray()}
     rotation={$rotation.toArray()}
     geometry={geometry}
-    material={new THREE.MeshLambertMaterial({ color, alphaMap, transparent: true })}
+    material={new THREE.MeshToonMaterial({ color, alphaMap, transparent: true })}
     castShadow
   />
 {/if}
