@@ -11,11 +11,11 @@
   $: canJump = velocity.y < .1 && velocity.y > -.1
   let jump = 0
 
-  const move = direction => {
+  const move = () => {
     if(!canJump) return
-    if(speed < maxSpeed) speed += .01
-    const x = direction * Math.sin(angle) * speed;
-    const z = direction * -Math.cos(angle) * speed;
+    if(speed < maxSpeed) speed += .05
+    const x = Math.sin(angle) * speed;
+    const z = -Math.cos(angle) * speed;
     velocity = new CANNON.Vec3(x, 0, z);
   }
 
@@ -24,7 +24,7 @@
   }
 
   const prepareJump = force => {
-    if(jump > 6) return
+    if(jump > 25) return
     jump += force
   }
 
@@ -43,15 +43,19 @@
   }
   
   SC.onFrame(() => {
-    if(currentKeys.ArrowUp) move(1)
-    if(currentKeys.ArrowDown && canJump) prepareJump(.1)
+    if(currentKeys.ArrowUp) move()
+    if(currentKeys.ArrowDown && canJump) prepareJump(.2)
     if(currentKeys.ArrowLeft) rotate(-1, .075)
     if(currentKeys.ArrowRight) rotate(1, .075)
   });
 
   const doJump = yes => {
     if(yes){
-      velocity = new CANNON.Vec3(velocity.x * jump, jump, velocity.z);
+      const ms = speed * jump < maxSpeed * 4 ? speed * jump : maxSpeed * 4
+      const vx = Math.sin(angle) * ms;
+      const vz = -Math.cos(angle) * ms;
+      const vy = .3 +jump / ((Math.abs(velocity.x) + 1) * (Math.abs(velocity.z) + 1))
+      velocity = new CANNON.Vec3(vx, vy, vz);
       console.log(velocity)
       jump = 0
     }
