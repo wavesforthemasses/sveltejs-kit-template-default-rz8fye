@@ -14,7 +14,7 @@
   export let mass = 10;
   let visible = false
 
-  const alphaMap = new THREE.TextureLoader().load( 'https://cdn.jsdelivr.net/gh/wavesforthemasses/sveltejs-kit-template-default-rz8fye@master/static/ball.png', () => {
+  const alphaMap = new THREE.TextureLoader().load( 'https://cdn.jsdelivr.net/gh/wavesforthemasses/sveltejs-kit-template-default-rz8fye@master/static/dMYV4cf.png', () => {
     visible = true
   } ) 
   alphaMap.needsUpdate = true;

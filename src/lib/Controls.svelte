@@ -51,7 +51,7 @@
 
   const doJump = yes => {
     if(yes){
-      velocity = new CANNON.Vec3(velocity.x, jump, velocity.z);
+      velocity = new CANNON.Vec3(velocity.x * jump, jump, velocity.z);
       console.log(velocity)
       jump = 0
     }
