@@ -9,6 +9,7 @@
   import World from "$lib/World.svelte";
   import { rdb } from "$lib/db";
   import { me } from "$lib/me";
+  import { vec3hashing } from "$lib/math";
   import { ref, onChildAdded, onChildChanged, onChildRemoved } from "@firebase/database";
   import { onMount, onDestroy } from 'svelte'
   let conn
@@ -52,7 +53,7 @@
   <Wall />
   <Me  />
   {#each elencoBalls as ball (ball.id)}
-    <Ball id={ball.id} position={new CANNON.Vec3(ball?.p?.x, ball?.p?.y, ball?.p?.z)} velocity={new CANNON.Vec3(ball?.v?.x, ball?.v?.y, ball?.v?.z)} rotation={PE.writableVec3(ball?.r?.x, ball?.r?.y, ball?.r?.z)} angle={ball?.angle} color={0xa0a0a0} />
+    <Ball id={ball.id} position={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.p})))} velocity={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.v})))} rotation={PE.writableVec3(...Object.values(vec3hashing.decode({encodedString: ball?.r})))} angle={ball?.angle} color={0xa0a0a0} />
   {/each}
   <Lights />
 </World>

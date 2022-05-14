@@ -4,6 +4,7 @@
   import { rdb } from "$lib/db";
   import { ref, update } from "@firebase/database";
   import { me } from "$lib/me";
+  import { vec3hashing } from "$lib/math";
 
   let currentKeys = {}
   let previousTime = 0
@@ -27,21 +28,21 @@
       previousTime = time
       update(ref($rdb), {
         [`/3d/balls/${$me?.id}`]: {
-          'p': {
+          'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
             z: position.z
-          },
-          'r': {
+          }),
+          'r': vec3hashing.encode({
             x: $rotation.x,
             y: $rotation.y,
             z: $rotation.z
-          },
-          'v': {
+          }),
+          'v': vec3hashing.encode({
             x: velocity.x,
             y: velocity.y,
             z: velocity.z
-          },
+          }),
           'a': angle
         }
       })
@@ -80,25 +81,25 @@
 
     const d = new Date();
     let time = d.getTime();
-    if(time - previousTime > 750){
+    if(time - previousTime > 250){
       previousTime = time
       update(ref($rdb), {
         [`/3d/balls/${$me?.id}`]: {
-          'p': {
+          'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
             z: position.z
-          },
-          'r': {
+          }),
+          'r': vec3hashing.encode({
             x: $rotation.x,
             y: $rotation.y,
             z: $rotation.z
-          },
-          'v': {
+          }),
+          'v': vec3hashing.encode({
             x: velocity.x,
             y: velocity.y,
             z: velocity.z
-          },
+          }),
           'a': angle
         }
       })
@@ -115,21 +116,21 @@
       jump = 0
       update(ref($rdb), {
         [`/3d/balls/${$me?.id}`]: {
-          'p': {
+          'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
             z: position.z
-          },
-          'r': {
+          }),
+          'r': vec3hashing.encode({
             x: $rotation.x,
             y: $rotation.y,
             z: $rotation.z
-          },
-          'v': {
+          }),
+          'v': vec3hashing.encode({
             x: velocity.x,
             y: velocity.y,
             z: velocity.z
-          },
+          }),
           'a': angle
         }
       })

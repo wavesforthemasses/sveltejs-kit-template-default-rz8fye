@@ -42,7 +42,7 @@
   <!-- Ground -->
   <PE.Body rotation={[-Math.PI / 2, 0, 0]}>
     <PE.Shape {shape} />
-    <PE.Material friction={100} restitution={.9} />
+    <PE.Material friction={100} restitution={.5} />
   </PE.Body>
   <SC.Mesh
     rotation={[-Math.PI / 2, 0, 0]}

@@ -12,7 +12,7 @@
   export let color = 0x990000;
   export let radius = .2;
   export let friction = 100;
-  export let restitution = 1;
+  export let restitution = .7;
   export let mass = 10;
 
   let visible = false

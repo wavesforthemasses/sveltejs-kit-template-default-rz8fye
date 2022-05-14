@@ -1,7 +1,7 @@
 export const vec3hashing = {
 	charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split(''),
 	encode: (params) => {
-		const { x, y, z, p = 7, min = -100, max = 100, encoded = '' } = params;
+		const { x, y, z, p = 15, min = -100, max = 100, encoded = '' } = params;
 		const { minX = min, maxX = max, minY = min, maxY = max, minZ = min, maxZ = max } = params;
 		const deltaX = [...Array(4).keys()].find((i) => x < ((i + 1) * (maxX - minX)) / 4 + minX);
 		const deltaY = [...Array(4).keys()].find((i) => y < ((i + 1) * (maxY - minY)) / 4 + minY);
@@ -24,16 +24,19 @@ export const vec3hashing = {
 	decode: (params) => {
 		const { encodedString, min = -100, max = 100 } = params;
 		const { minX = min, maxX = max, minY = min, maxY = max, minZ = min, maxZ = max } = params;
-		const [deltaX, deltaY, deltaZ] =
-			'00' + vec3hashing.charset.indexOf(encodedString[0]).toString(4).slice(-3).split('');
-		const minX2 = (deltaX * (maxX - minX)) / 4 + minX;
-		const maxX2 = ((deltaX + 1) * (maxX - minX)) / 4 + minX;
-		const minY2 = (deltaY * (maxY - minY)) / 4 + minY;
-		const maxY2 = ((deltaY + 1) * (maxY - minY)) / 4 + minY;
-		const minZ2 = (deltaZ * (maxZ - minZ)) / 4 + minZ;
-		const maxZ2 = ((deltaZ + 1) * (maxZ - minZ)) / 4 + minZ;
+		const [deltaX, deltaY, deltaZ] = (
+			'00' + vec3hashing.charset.indexOf(encodedString[0]).toString(4)
+		)
+			.slice(-3)
+			.split('');
+		const minX2 = (parseInt(deltaX) * (maxX - minX)) / 4 + minX;
+		const maxX2 = ((parseInt(deltaX) + 1) * (maxX - minX)) / 4 + minX;
+		const minY2 = (parseInt(deltaY) * (maxY - minY)) / 4 + minY;
+		const maxY2 = ((parseInt(deltaY) + 1) * (maxY - minY)) / 4 + minY;
+		const minZ2 = (parseInt(deltaZ) * (maxZ - minZ)) / 4 + minZ;
+		const maxZ2 = ((parseInt(deltaZ) + 1) * (maxZ - minZ)) / 4 + minZ;
 		if (encodedString.length > 1)
-			return vec3hashing.encode({
+			return vec3hashing.decode({
 				...params,
 				minX: minX2,
 				maxX: maxX2,
