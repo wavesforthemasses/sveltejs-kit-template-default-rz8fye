@@ -21,26 +21,31 @@
     const x = Math.sin(angle) * speed;
     const z = -Math.cos(angle) * speed;
     velocity = new CANNON.Vec3(x, velocity.y, z);
-    update(ref($rdb), {
-      [`/3d/balls/${$me?.id}`]: {
-        'p': {
-          x: position.x,
-          y: position.y,
-          z: position.z
-        },
-        'r': {
-          x: $rotation.x,
-          y: $rotation.y,
-          z: $rotation.z
-        },
-        'v': {
-          x: velocity.x,
-          y: velocity.y,
-          z: velocity.z
-        },
-        'a': angle
-      }
-    })
+    const d = new Date();
+    let time = d.getTime();
+    if(time - previousTime > 15){
+      previousTime = time
+      update(ref($rdb), {
+        [`/3d/balls/${$me?.id}`]: {
+          'p': {
+            x: position.x,
+            y: position.y,
+            z: position.z
+          },
+          'r': {
+            x: $rotation.x,
+            y: $rotation.y,
+            z: $rotation.z
+          },
+          'v': {
+            x: velocity.x,
+            y: velocity.y,
+            z: velocity.z
+          },
+          'a': angle
+        }
+      })
+    }
   }
 
   const rotate = (direction, deg) => {
@@ -72,10 +77,9 @@
     if(currentKeys.ArrowLeft) rotate(-1, .01)
     if(currentKeys.ArrowRight) rotate(1, .01)
 
-    /*
     const d = new Date();
     let time = d.getTime();
-    if(time - previousTime > 150){
+    if(time - previousTime > 750){
       previousTime = time
       update(ref($rdb), {
         [`/3d/balls/${$me?.id}`]: {
@@ -98,7 +102,6 @@
         }
       })
     }
-    */
   });
 
   const doJump = yes => {
@@ -109,6 +112,26 @@
       const vy = .3 +jump / ((Math.abs(velocity.x) + 1) * (Math.abs(velocity.z) + 1))
       velocity = new CANNON.Vec3(vx, vy, vz);
       jump = 0
+      update(ref($rdb), {
+        [`/3d/balls/${$me?.id}`]: {
+          'p': {
+            x: position.x,
+            y: position.y,
+            z: position.z
+          },
+          'r': {
+            x: $rotation.x,
+            y: $rotation.y,
+            z: $rotation.z
+          },
+          'v': {
+            x: velocity.x,
+            y: velocity.y,
+            z: velocity.z
+          },
+          'a': angle
+        }
+      })
     }
   }
   $: doJump(!currentKeys.ArrowDown && jump > 0 && canJump)

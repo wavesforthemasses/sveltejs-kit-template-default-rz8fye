@@ -9,7 +9,7 @@
   import World from "$lib/World.svelte";
   import { rdb } from "$lib/db";
   import { me } from "$lib/me";
-  import { ref, set, onChildAdded, onChildChanged, onChildRemoved } from "@firebase/database";
+  import { ref, onChildAdded, onChildChanged, onChildRemoved } from "@firebase/database";
   import { onMount, onDestroy } from 'svelte'
   let conn
   let balls
@@ -45,14 +45,6 @@
   })
 
   $: elencoBalls = Object.keys(balls || {}).filter(id => id != $me?.id).map(id => ({...balls[id], id}))
-
-  const beforeUnload = e => {
-    e.preventDefault();
-    // Chrome requires returnValue to be set.
-    e.returnValue = '';
-    if($me?.id) set(ref($rdb, `3d/balls/${$me?.id}`), null)
-    return ""; 
-  }
 </script>
 
 <World>
@@ -64,5 +56,3 @@
   {/each}
   <Lights />
 </World>
-
-<svelte:window on:beforeunload={beforeUnload}/>
