@@ -3,13 +3,14 @@
   import * as CANNON from "cannon-es";
   import { rdb } from "$lib/db";
   import { ref, update } from "@firebase/database";
+  import { me } from "$lib/me";
 
   let currentKeys = {}
+  let previousTime = 0
   export let velocity = CANNON.Vec3.ZERO;
   export let angle = 0
   export let position
   export let rotation
-  export let id = 0
   let speed = 1
   let maxSpeed = 4
   $: canJump = velocity.y < .3 && velocity.y > -.3
@@ -20,6 +21,26 @@
     const x = Math.sin(angle) * speed;
     const z = -Math.cos(angle) * speed;
     velocity = new CANNON.Vec3(x, velocity.y, z);
+    update(ref($rdb), {
+      [`/3d/balls/${$me?.id}`]: {
+        'p': {
+          x: position.x,
+          y: position.y,
+          z: position.z
+        },
+        'r': {
+          x: $rotation.x,
+          y: $rotation.y,
+          z: $rotation.z
+        },
+        'v': {
+          x: velocity.x,
+          y: velocity.y,
+          z: velocity.z
+        },
+        'a': angle
+      }
+    })
   }
 
   const rotate = (direction, deg) => {
@@ -50,9 +71,14 @@
     if(currentKeys.ArrowDown && canJump) prepareJump(.2)
     if(currentKeys.ArrowLeft) rotate(-1, .01)
     if(currentKeys.ArrowRight) rotate(1, .01)
-    if(parseInt(Math.random() * 15) == 0){
+
+    /*
+    const d = new Date();
+    let time = d.getTime();
+    if(time - previousTime > 150){
+      previousTime = time
       update(ref($rdb), {
-        [`/3d/balls/ciao`]: {
+        [`/3d/balls/${$me?.id}`]: {
           'p': {
             x: position.x,
             y: position.y,
@@ -62,10 +88,17 @@
             x: $rotation.x,
             y: $rotation.y,
             z: $rotation.z
-          }
+          },
+          'v': {
+            x: velocity.x,
+            y: velocity.y,
+            z: velocity.z
+          },
+          'a': angle
         }
       })
     }
+    */
   });
 
   const doJump = yes => {

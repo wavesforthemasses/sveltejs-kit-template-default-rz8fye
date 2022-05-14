@@ -1,19 +1,68 @@
 <script lang="ts">
   import * as CANNON from "cannon-es";
+  import * as PE from "svelte-cannon";
   import Wall from "$lib/Wall.svelte";
   import Ball from "$lib/Ball.svelte";
   import Me from "$lib/Me.svelte";
   import Lights from "$lib/Lights.svelte";
   import Ground from "$lib/Ground.svelte";
   import World from "$lib/World.svelte";
+  import { rdb } from "$lib/db";
+  import { me } from "$lib/me";
+  import { ref, set, onChildAdded, onChildChanged, onChildRemoved } from "@firebase/database";
+  import { onMount, onDestroy } from 'svelte'
+  let conn
+  let balls
+
+  onMount(() => {
+    conn = ref($rdb, "3d/balls")
+    balls = {}
+    onChildAdded(conn, (data) => {
+      if(data.key == $me?.id) return
+      balls = {
+          ...balls,
+          [data.key]: data.val()
+      }
+    });
+
+    onChildChanged(conn, (data) => {
+      if(data.key == $me?.id) return
+      balls = {
+          ...balls,
+          [data.key]: data.val()
+      }
+    });
+
+    onChildRemoved(conn, (data) => {
+      if(data.key == $me?.id) return
+      delete balls[data.key]
+      balls = balls
+    });
+  })
+
+  onDestroy(() => {
+    if(conn?.off) conn.off()
+  })
+
+  $: elencoBalls = Object.keys(balls || {}).filter(id => id != $me?.id).map(id => ({...balls[id], id}))
+
+  const beforeUnload = e => {
+    e.preventDefault();
+    // Chrome requires returnValue to be set.
+    e.returnValue = '';
+    if($me?.id) set(ref($rdb, `3d/balls/${$me?.id}`), null)
+    return ""; 
+  }
 </script>
 
 <World>
   <Ground />
-  <Wall />1
+  <Wall />
   <Me  />
-  {#each [...Array(10).keys()] as i}
-    <Ball mass={1 + Math.random() * 99} radius={.1 + Math.random() / 5} position={new CANNON.Vec3(.5 + Math.random(), 2.5 + Math.random(), -0.5  + Math.random() )} color={0xa0a0a0} />
+  {#each elencoBalls as ball (ball.id)}
+    <Ball id={ball.id} position={new CANNON.Vec3(ball?.p?.x, ball?.p?.y, ball?.p?.z)} velocity={new CANNON.Vec3(ball?.v?.x, ball?.v?.y, ball?.v?.z)} rotation={PE.writableVec3(ball?.r?.x, ball?.r?.y, ball?.r?.z)} angle={ball?.angle} color={0xa0a0a0} />
   {/each}
   <Lights />
 </World>
+
+<svelte:window on:beforeunload={beforeUnload}/>

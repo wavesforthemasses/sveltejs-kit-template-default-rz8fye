@@ -11,7 +11,7 @@
   let rotation
 </script>
 
-<Ball mass={100} bind:position={position} bind:rotation={rotation} color={$settings?.color} bind:velocity={velocity} on:collide={e =>  $settings.id = e.detail.body.id}  />
+<Ball bind:position={position} bind:rotation={rotation} color={$settings?.color} bind:velocity={velocity} on:collide={e =>  $settings.id = e.detail.body.id}  />
 <Camera target={position.toArray()} />
 
 <Controls bind:velocity={velocity} bind:rotation={rotation} bind:position={position} bind:angle={angle} />

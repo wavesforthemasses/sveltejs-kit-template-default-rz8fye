@@ -29,7 +29,7 @@
     return {vertices, faces}
   }
   const geometry = new THREE.PlaneGeometry(100, 100, 20, 20)
-  geometry.attributes.position.array = geometry.attributes.position.array.map((v, i) => i % 3 == 2 ? Math.random(.5) : v)
+  geometry.attributes.position.array = geometry.attributes.position.array.map((v, i) => i % 3 == 2 ? (Math.cos(i) + 1) / 2 : v)
 
   const toShape = g => {
     const {vertices, faces} = generateVertices(g.attributes.position.array, 20, 20)
