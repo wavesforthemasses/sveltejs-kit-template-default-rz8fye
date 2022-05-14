@@ -28,6 +28,7 @@
     "@lukeed/uuid": "^2.0.0",
     "cannon-es": "^0.19.0",
     "cookie": "^0.4.1",
+    "firebase": "^9.8.1",
     "svelte-cannon": "^0.8.0",
     "svelte-cubed": "^0.2.1",
     "three": "^0.140.2"

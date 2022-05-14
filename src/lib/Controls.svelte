@@ -1,15 +1,37 @@
 <script lang="ts">
   import * as SC from "svelte-cubed";
   import * as CANNON from "cannon-es";
+  import { rdb } from "$lib/db";
+  import { ref, update, get, onValue } from "@firebase/database";
 
   let currentKeys = {}
   export let velocity = CANNON.Vec3.ZERO;
   export let angle = 0
   export let position
+  export let rotation
+  export let id = 0
   let speed = 1
   let maxSpeed = 4
   $: canJump = velocity.y < .3 && velocity.y > -.3
   let jump = 0
+  let frame = 0
+
+
+  /*const onChange = (p, r) => {
+    if(frame % 3000 == 0){
+      update(ref($rdb), {
+        [`/3d/balls/${id}`]: {
+          'p/x': p.x,
+          'p/y': p.y,
+          'p/z': p.z,
+          'r/x': r.x,
+          'r/y': r.y,
+          'r/z': r.z,
+        }
+      })
+    }
+  }
+  $: onChange(position, rotation)*/
 
   const move = () => {
     if(speed < maxSpeed) speed += .05
@@ -46,6 +68,7 @@
     if(currentKeys.ArrowDown && canJump) prepareJump(.2)
     if(currentKeys.ArrowLeft) rotate(-1, .01)
     if(currentKeys.ArrowRight) rotate(1, .01)
+    frame += 1
   });
 
   const doJump = yes => {
@@ -55,7 +78,6 @@
       const vz = -Math.cos(angle) * ms;
       const vy = .3 +jump / ((Math.abs(velocity.x) + 1) * (Math.abs(velocity.z) + 1))
       velocity = new CANNON.Vec3(vx, vy, vz);
-      console.log(velocity)
       jump = 0
     }
   }
