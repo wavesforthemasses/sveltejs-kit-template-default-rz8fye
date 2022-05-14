@@ -8,15 +8,14 @@
   export let position
   let speed = 1
   let maxSpeed = 4
-  $: canJump = velocity.y < .1 && velocity.y > -.1
+  $: canJump = velocity.y < .3 && velocity.y > -.3
   let jump = 0
 
   const move = () => {
-    if(!canJump) return
     if(speed < maxSpeed) speed += .05
     const x = Math.sin(angle) * speed;
     const z = -Math.cos(angle) * speed;
-    velocity = new CANNON.Vec3(x, 0, z);
+    velocity = new CANNON.Vec3(x, velocity.y, z);
   }
 
   const rotate = (direction, deg) => {
@@ -45,8 +44,8 @@
   SC.onFrame(() => {
     if(currentKeys.ArrowUp) move()
     if(currentKeys.ArrowDown && canJump) prepareJump(.2)
-    if(currentKeys.ArrowLeft) rotate(-1, .075)
-    if(currentKeys.ArrowRight) rotate(1, .075)
+    if(currentKeys.ArrowLeft) rotate(-1, .01)
+    if(currentKeys.ArrowRight) rotate(1, .01)
   });
 
   const doJump = yes => {
