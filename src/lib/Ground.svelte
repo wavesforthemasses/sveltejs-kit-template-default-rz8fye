@@ -7,15 +7,22 @@
   const generateVertices = (coords, gx, gz) => {
     let vertices = []
     for (let i = 0; i < coords.length; i += 3) {
-      const [xx, zz, yy] = coords.slice(i, i + 3)
+      const [xx, yy, zz] = coords.slice(i, i + 3)
       vertices.push(new CANNON.Vec3(xx, yy, zz))
     }
     let faces = []
     for (let x = 0; x <= gx; x++) {
       for (let z = 0; z <= gz; z++) {
         if(x < gx && z < gz){
-          faces.push([(z + 1) * (gx + 1) + x, z * (gx + 1) + x, z * (gx + 1) + x + 1])
-          faces.push([(z + 1) * (gx + 1) + x + 1, (z + 1) * (gx + 1) + x, z * (gx + 1) + x + 1])
+          const a = (z + 1) * (gx + 1) + x
+          const b = z * (gx + 1) + x
+          const c = z * (gx + 1) + x + 1
+          const d = (z + 1) * (gx + 1) + x + 1
+          faces = [
+            ...faces,
+            [c, b, a],
+            [a, d, c]
+          ]
         }
       }
     }
@@ -26,20 +33,21 @@
 
   const toShape = g => {
     const {vertices, faces} = generateVertices(g.attributes.position.array, 20, 20)
-    console.log(vertices, faces)
     return new CANNON.ConvexPolyhedron( { vertices, faces } );
   }
-  const shape = toShape(geometry)
+  const shape = toShape(geometry) 
 </script>
 
-<!-- Ground -->
-<PE.Body rotation={[-Math.PI / 2, 0, 0]}>
-  <PE.Shape {shape} />
-  <PE.Material friction={100} restitution={.9} />
-</PE.Body>
-<SC.Mesh
-  rotation={[-Math.PI / 2, 0, 0]}
-  geometry={geometry}
-  material={new THREE.MeshToonMaterial({ color: 0x90b5fb })}
-  receiveShadow
-/> 
+{#if shape}
+  <!-- Ground -->
+  <PE.Body rotation={[-Math.PI / 2, 0, 0]}>
+    <PE.Shape {shape} />
+    <PE.Material friction={100} restitution={.9} />
+  </PE.Body>
+  <SC.Mesh
+    rotation={[-Math.PI / 2, 0, 0]}
+    geometry={geometry}
+    material={new THREE.MeshToonMaterial({ color: 0x90b5fb })}
+    receiveShadow
+  /> 
+{/if}

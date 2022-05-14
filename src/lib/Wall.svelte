@@ -18,10 +18,8 @@
 <PE.Body position={new CANNON.Vec3(...adjustedPosition)} on:collide={e => {
   if(e.detail.target.id == $settings.id){
     currentColor = $settings.color
-    clearTimeout(sto)
-    sto = setTimeout(() => currentColor = color, 10000)
   }
-}}>
+}} on:sleep={() => currentColor = color}>
   <PE.Box size={size.map(s => s/2)} />
   <PE.Material friction={100} restitution={.9} />
 </PE.Body>
