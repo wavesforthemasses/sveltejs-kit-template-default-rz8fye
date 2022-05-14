@@ -50,6 +50,7 @@
 
   const rotate = (direction, deg) => {
     angle += direction * deg
+    if(Math.abs(angle) > 2 * Math.PI) angle = Math.asin(Math.sin(angle))
   }
 
   const prepareJump = force => {
