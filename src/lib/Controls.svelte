@@ -16,18 +16,12 @@
   let maxSpeed = 4
   $: canJump = velocity.y < .3 && velocity.y > -.3
   let jump = 0
-  let maxVx, maxVy, maxVz = 0
-
-  $: console.log(maxVx, maxVy, maxVz)
 
   const move = () => {
     if(speed < maxSpeed) speed += .05
     const x = Math.sin(angle) * speed;
     const z = -Math.cos(angle) * speed;
     velocity = new CANNON.Vec3(x, velocity.y, z);
-    maxVx = maxVx && maxVx > $rotation.x ? maxVx : $rotation.x
-    maxVy = maxVy && maxVy > $rotation.y ? maxVy : $rotation.y
-    maxVz = maxVz && maxVz > $rotation.z ? maxVz : $rotation.z
     const d = new Date();
     let time = d.getTime();
     if(time - previousTime > 15){
@@ -37,19 +31,14 @@
           'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
-            z: position.z
-          }),
-          'r': vec3hashing.encode({
-            x: $rotation.x,
-            y: $rotation.y,
-            z: $rotation.z, 
-            min: -6, max: 6, p: 4
+            z: position.z,
+            p: 11
           }),
           'v': vec3hashing.encode({
             x: velocity.x,
             y: velocity.y,
             z: velocity.z, 
-            min: -25, max: 25, p: 9
+            min: -25, max: 25, p: 10
           })
         }
       })
@@ -88,20 +77,21 @@
 
     const d = new Date();
     let time = d.getTime();
-    if(time - previousTime > 250){
+    if(time - previousTime > 75){
       previousTime = time
       update(ref($rdb), {
         [`/3d/balls/${$me?.id}`]: {
           'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
-            z: position.z
+            z: position.z,
+            p: 12
           }),
           'v': vec3hashing.encode({
             x: velocity.x,
             y: velocity.y,
             z: velocity.z, 
-            min: -25, max: 25, p: 9
+            min: -25, max: 25, p: 10
           })
         }
       })
@@ -121,7 +111,8 @@
           'p': vec3hashing.encode({
             x: position.x,
             y: position.y,
-            z: position.z
+            z: position.z,
+            p: 10
           }),
           'v': vec3hashing.encode({
             x: velocity.x,
