@@ -53,7 +53,7 @@
   <Wall />
   <Me  />
   {#each elencoBalls as ball (ball.id)}
-    <Ball id={ball.id} position={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.p})))} velocity={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.v})))} rotation={PE.writableVec3(...Object.values(vec3hashing.decode({encodedString: ball?.r})))} angle={ball?.angle} color={0xa0a0a0} />
+    <Ball id={ball.id} position={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.p})))} velocity={new CANNON.Vec3(...Object.values(vec3hashing.decode({encodedString: ball?.v, min: -25, max: 25})))} rotation={PE.writableVec3(...Object.values(vec3hashing.decode({encodedString: ball?.r, min: -6, max: 6})))} color={0xa0a0a0} />
   {/each}
   <Lights />
 </World>
